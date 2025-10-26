@@ -1,0 +1,249 @@
+
+schema_version: 1
+meta:
+  project: "chat-deescalation-radar"
+  locale: "ru-RU"
+
+triggers:
+  - name: INSULT
+    description: "прямые оскорбления"
+    pattern: '\b(?:ты\s+(?:кончен(?:ый|ая|ое|ые)|некончен(?:ый|ая)|ненормальн(?:ый|ая|ые))|(?:идиот(?:изм|ка|ы)?)|(?:туп(?:ой|ица|ец|ари)?)|(?:кретин(?:чик|ы)?)|(?:дебил(?:ы)?)|(?:урод(?:ец|ина|ы)?)|(?:ублюд(?:ок|ки)?)|(?:пидорас(?:ы)?)|(?:пидор(?:ы)?)|(?:пидр(?:ы)?)|(?:еб(?:а|о)ньк(?:о|а)?)|(?:ебанут(?:ый|ая|ые))|(?:сука(?:н)?)|(?:сучка(?:и)?)|(?:мудак(?:и)?)|(?:мудила(?:ы)?)|(?:гандон(?:ы)?)|(?:придур(?:ок|ки)?)|(?:придурок(?:и)?)|(?:долбо(?:ё|е)б(?:ы)?)|(?:пизд(?:ец|абол)(?:ы)?)|(?:ху(?:й|ило|есос)(?:ы)?)|(?:мраз(?:ь|и)?)|(?:г[ао]вн(?:о|ё|юк|ишко|ища)?)|(?:шлюха(?:и)?)|(?:шмар(?:а|ы)?)|(?:бл(?:я|ять))|(?:падл(?:а|о|ы)?)|(?:скотин(?:а|ы)?)|(?:свин(?:ья|ьи)?)|(?:жоп(?:а|ы)?)|(?:засранец(?:ы)?)|(?:залуп(?:а|ы)?)|(?:конч(?:ин(?:а)|ен(?:ный)?))|(?:ебл(?:ан|о|анут(?:ый|ая)))|(?:п(?:и|е)зд(?:а|ить|о|ы|ец))|(?:охуе(?:л|вший|вшая))|(?:выблядок(?:и)?)|(?:у[ёе]бок(?:и)?)|(?:у[её]б(?:а|и|щик))|(?:полный\s+(?:идиот|ноль|развод|кретин|ублюдок|мудак|долбо(?:ё|е)б))|(?:ничтож(?:ество|ный))|(?:никч(?:ё|е)м(?:ный|ный\W*человек))|(?:ты\s+совершенн?о\s+бесчеловечен?))\b'
+    flags: ["i"]
+    event: INSULT
+    weight: 5
+
+  - name: THREAT
+    description: "прямые/завуалированные угрозы"
+    pattern: '\b(?:я\s+тебя\s+(?:найду(?:\s+и)?|уволю|уволим|убью|убь(?:ю|ешь)|сотру|порешу|приб(?:ь|и)ю|прикончу|уничтожу|разнесу|разъеб(?:у|и|ешь)|морду\s+набью|рожу\s+набью|выеб(?:у|ешь|у\s+тебя(?:\s+в)?)|выебу|достану(?:\s+тебя)?|я\s+тебя\s+достану)|жди\s+(?:проблем(?:ы)?|неприятностей|хлопот)|пожалеешь|ты\s+пожалеешь|будут\s+последствия|тихо\s+не\s+останется|не\s+останется\s+безнаказанным|посадим\s+тебя|расстреляем|поймаем\s+тебя|найд(?:ё|е)м\s+тебя|я\s+тебя\s+вычислю|я\s+тебе\s+устрою|ты\s+заплатишь|сблюду|сделаю\s+так,\s*что|пош(?:ё|е)л\s+нахуй|иди\s+нахуй|иди\s+в\s+ад|пойд(?:ё|е)шь\s+нахуй|я\s+тебя\s+выжму)\b'
+    flags: ["i"]
+    event: THREAT
+    weight: 5
+
+  - name: ALL_CAPS
+    description: "капс фрагмент (>=8 лат/кирилл подряд)"
+    pattern: '\b[A-ZА-ЯЁ]{8,}\b'
+    flags: ["m"]
+    event: ALL_CAPS
+    weight: 3
+
+  - name: PROVOCATION
+    description: "провокации/обесценивание"
+    pattern: '\b(?:ну\s+да(?:,\s*конечно|\s*конечно)?|ага(?:,?\s*конечно)?|серь(?:ё|е)зно\??|неужели|и\s+что\?|сам(?:о|а)\s+дурак|умник\s+наш(?:ё|е)лся|понятно,\s+вс(?:ё|е)\s+с\s+тобой|ясно,\s+кто\s+тут\s+(?:кретин|идиот)|делай\s+что\s+хочешь|похуй|плевать(?:\s+на)?|насрать|до\s+лампочки|до\s+пизд(?:ы)?|ну\s+и\s+ч(?:ё|е)|ну\s+и\s+что|пф(?:ф+)?|фу\s+ты|ох\s+ты|ну\s+ты\s+да(?:ё|е)шь|ну\s+давай|а\s+ну-ка|ещ(?:ё|е)\s+бы|и\s+не\s+говори|вот\s+это\s+да|ха-ха|лол(?:што)?|смешно(?:,\s*да)?|гы|ты\s+смешной|какая\s+шутка|давай,\s*смейся)\b'
+    flags: ["i"]
+    event: PROVOCATION
+    weight: 3
+
+  - name: ACCUSATION
+    description: "обвинительные формулы"
+    pattern: '\b(?:ты\s+(?:всегд[ау]|никогда|снова|опять(?:\s+и\s+опять)?|вечно(?:\s+одно\s+и\s+то\s+же)?|опять\s+то\s+же\s+самое)|это\s+твоя\s+вина|из[-\s]?за\s+тебя(?:\s+всегд[ау])?|ты\s+(?:виноват[а]?|испортил[а]?|подв(?:ё|е|е)л[а]?|опоздал[а]?|не\s+сделал[а]?|просрал[а]?|заеб(?:ал|ала)|достал[а]?|ничего\s+не\s+понимаешь|не\s+способен(?:ен|на)?|ничего\s+не\s+умеешь)|твои\s+(?:косяки|проколы|ошибки)|ты\s+(?:всё|все)\s+испорти(?:л|ла|ли)|по\s+тво(?:ей|ей\s+вине|ей\s+ошибке)|всё\s+из[-\s]?за\s+тебя)\b'
+    flags: ["i"]
+    event: ACCUSATION
+    weight: 2
+
+  - name: SARCASTIC
+    description: "сарказм/язвительность"
+    pattern: '\b(?:браво+|гениальн(?:о|енько)|как\s+обычн(?:о|енько)|молодец(?:\s+же)?|ну\s+да(?:,\s*конечно)?|очень\s+умно|поздравляю|отлично(?:\s+(?:сработано|придумано))?|просто\s+прекрасно|замечательно|ах[,!\s]*какой\s+(?:умница|молодец)|ну\s+ты\s+(?:красавчик|герой)|шикарно|сарказм|ирони(я|чно)|ахаха+|ха-ха+|смешно(?:,\s*да)?|ну\s+супер|да\s+ладно|великолепно|ну\s+конечно|ага,\s*очень\s+смешно|о,\s*гениально|супер,\s*ага)\b'
+    flags: ["i"]
+    event: SARCASTIC
+    weight: 2
+
+  - name: INTERRUPT
+    description: "перебивание / обрыв"
+    pattern: '\b(?:замолчи(?:,\s*сейчас)?|слушай(?:,\s*я)?|хватит(?:\s+уже)?|прекрати(?:,\s*уже)?|заткнись(?:,\s*(?:ты|те))?|заткни(?:сь|те)|завали\s+(?:хл[еэ]бал(?:о|ьник)|рот)|завались|хватит\s+(?:говорить|нести)|не\s+неси|п(?:и|е)зд(?:ец|ишь)|заеб(?:ал[аи]?|али)|достал[аио]?|перебей|не\s+перебивай(?:те)?|не\s+вмешивайся|дай\s+(?:закончить|сказать)|дай\s+мне\s+договорить|дай\s+человеку\s+сказать|не\s+лезь)\b'
+    flags: ["i"]
+    event: INTERRUPT
+    weight: 2
+
+  - name: BLAME_YOU
+    description: "личная вина адресата"
+    pattern: '\b(?:ты\s+(?:виноват[а]?|испортил[а]?|подв(?:ё|е|е)л[а]?|(?:всё|все)\s+испортил[аи]?|заеб(?:ал|ала)|достал[а]?|просрал[а]?|упустил[а]?|никч(?:ё|е)мн(?:ый|ная)|бесполезн(?:ый|ная)|ни\s+на\s+что\s+не\s+способен|ничего\s+не\s+умеешь|ответственен|подставил[а]?|постоянно\s+всё\s+ломаешь)|твои\s+(?:косяки|ошибки|проколы)|из[-\s]?за\s+тебя(?:\s+(?:всё|все))?|по\s+тво(?:ей\s+вине|ей\s+ошибке)|всё\s+из[-\s]?за\s+тебя)\b'
+    flags: ["i"]
+    event: BLAME_YOU
+    weight: 2
+
+  - name: APOLOGY
+    description: "извинение"
+    pattern: '\b(?:извин(?:и|ите|юсь|яюсь|я|ените)|прости(?:те|сь)?|сорр(?:и|ян)|пардон|виноват[аы]?|приношу\s+извинен(?:ия|ье)|прошу\s+(?:прощен(?:ия|ье)|извинен(?:ия|ье))|простите\s+меня|извини\s+меня|прощен(?:ия|ье)\s+прошу|сожалею)\b'
+    flags: ["i"]
+    event: APOLOGY
+    weight: -3
+
+  - name: EMPATHY
+    description: "признание эмоции/сочувствие"
+    pattern: '\b(?:понимаю(?:,\s*что)?(?:\s+тебе)?\s*(?:непросто|сложно|тяжело|грустно|обидно|тревожно|неуютно)|сочувствую|сожалею|вижу,\s*ты\s+(?:расстроен|зол|огорч(?:ё|е)н)|понимаю\s+твои\s+чувства|представляю,\s*как\s+тебе\s*(?:тяжело|нелегко)|мне\s+жаль(?:,\s*что)?|мне\s+действительно\s+жаль|ты\s+не\s+один|я\s+тебя\s+понимаю|держись|это\s+правда\s+непросто|мне\s+очень\s+жаль)\b'
+    flags: ["i"]
+    event: EMPATHY
+    weight: -2
+
+  - name: SOFTENER
+    description: "смягчители формулировок"
+    pattern: '\b(?:давай\s+попробуем|мог(?:л|ли)\s+бы\s+мы|можем\s+ли\s+мы|как\s+насч(?:ё|е)т|могу\s+уточнить|кажется|похоже|без\s+негатива|без\s+обид|без\s+(?:оскорблений|мата)|давай\s+без\s+(?:этого|эмоций|обид)|давай\s+спокойно|предлагаю\s+(?:обсудить|разобраться|взять\s+паузу)|возможно|вероятно|наверное|я\s+бы\s+предложил|что\s+если|не\s+хотите\s+ли|давайте\s+подумаем|может\s+быть|подумаем\s+вместе)\b'
+    flags: ["i"]
+    event: SOFTENER
+    weight: -2
+
+  - name: THANKS
+    description: "благодарность"
+    pattern: '\b(?:спасибо(?:,\s*что)?|спасибо\s+(?:большое|огромное)|огромное\s+спасибо|благодарю|признателен(?:а)?|ценю\s+(?:помощь|понимание|участие)|благодарствую|мерси|спс|спасиб(?:ки|ос|о)|благодарю\s+вас|очень\s+признателен|огромная\s+благодарность|спасибо\s+тебе)\b'
+    flags: ["i"]
+    event: THANKS
+    weight: -1
+
+  - name: ACKNOWLEDGE
+    description: "подтверждение/принятие"
+    pattern: '\b(?:вижу|понял[а]?|понимаю|да,\s*верно|принято|ясно|уяснил[а]?|так\s+и\s+сделаем|хорошо|окей|ок|договорились|учту|беру\s+на\s+заметку|в\s+курсе|принял[а]?|понятно|ясненько|окей,\s+понял|согласен)\b'
+    flags: ["i"]
+    event: ACKNOWLEDGE
+    weight: -1
+
+  - name: OFFER_PAUSE
+    description: "предложение паузы"
+    pattern: '\b(?:давай\s+сделаем\s+паузу|верн(?:ё|е)мся\s+позже|нужно\s+время\s+остыть|давай\s+отдохн(?:ё|е)м|предлагаю\s+передохнуть|сделаем\s+перерыв|остынем\s+и\s+продолжим|верн(?:ё|е)мся\s+к\s+этому\s+(?:позже|завтра)|дай(?:те)?\s+мне\s+минуту|хочу\s+подумать|нужен\s+перерыв|дайте\s+время|пауза(?:,\s*пожалуйста)?|давай\s+прервёмся|давай\s+на\s+минутку\s+остановимся)\b'
+    flags: ["i"]
+    event: OFFER_PAUSE
+    weight: -2
+
+labels:
+  NEG_STRONG: ["INSULT", "THREAT", "PROVOCATION", "ALL_CAPS"]
+  NEG_MILD: ["ACCUSATION", "SARCASTIC", "INTERRUPT", "BLAME_YOU"]
+  POSITIVE: ["APOLOGY", "EMPATHY", "SOFTENER", "THANKS", "ACKNOWLEDGE", "OFFER_PAUSE"]
+
+risk:
+  base_by_state:
+    NEUTRAL: 0
+    TENSE: 1
+    HEATED: 3
+    REPAIRED: 0
+  decay_per_step: 1
+  cap: 20
+  event_weights_override: {}
+
+dfa:
+  states: ["NEUTRAL", "TENSE", "HEATED", "REPAIRED"]
+  start_state: "NEUTRAL"
+  transitions:
+    - from: "NEUTRAL"
+      when_any_of: ["INSULT", "THREAT", "ALL_CAPS", "PROVOCATION"]
+      to: "HEATED"
+    - from: "NEUTRAL"
+      when_any_of: ["ACCUSATION", "SARCASTIC", "BLAME_YOU", "INTERRUPT"]
+      to: "TENSE"
+    - from: "NEUTRAL"
+      when_any_of: ["APOLOGY", "EMPATHY", "SOFTENER", "THANKS", "ACKNOWLEDGE"]
+      to: "NEUTRAL"
+    - from: "NEUTRAL"
+      otherwise: true
+      to: "NEUTRAL"
+
+    - from: "TENSE"
+      when_any_of: ["INSULT", "THREAT", "ALL_CAPS", "PROVOCATION"]
+      to: "HEATED"
+    - from: "TENSE"
+      when_any_of: ["APOLOGY", "EMPATHY", "SOFTENER", "THANKS", "OFFER_PAUSE", "ACKNOWLEDGE"]
+      to: "REPAIRED"
+    - from: "TENSE"
+      when_any_of: ["ACCUSATION", "SARCASTIC", "BLAME_YOU", "INTERRUPT"]
+      to: "TENSE"
+    - from: "TENSE"
+      otherwise: true
+      to: "TENSE"
+
+    - from: "HEATED"
+      when_any_of: ["APOLOGY", "EMPATHY", "SOFTENER", "THANKS", "OFFER_PAUSE", "ACKNOWLEDGE"]
+      to: "TENSE"
+    - from: "HEATED"
+      when_any_of: ["INSULT", "THREAT", "PROVOCATION", "ALL_CAPS"]
+      to: "HEATED"
+    - from: "HEATED"
+      otherwise: true
+      to: "HEATED"
+
+    - from: "REPAIRED"
+      when_any_of: ["INSULT", "THREAT", "PROVOCATION", "ALL_CAPS"]
+      to: "HEATED"
+    - from: "REPAIRED"
+      when_any_of: ["ACCUSATION", "SARCASTIC", "BLAME_YOU", "INTERRUPT"]
+      to: "TENSE"
+    - from: "REPAIRED"
+      when_any_of: ["APOLOGY", "EMPATHY", "SOFTENER", "THANKS", "ACKNOWLEDGE"]
+      to: "REPAIRED"
+    - from: "REPAIRED"
+      otherwise: true
+      to: "REPAIRED"
+
+ltlf:
+  predicates:
+    S_NEUTRAL: "state == NEUTRAL"
+    S_TENSE: "state == TENSE"
+    S_HEATED: "state == HEATED"
+    S_REPAIRED: "state == REPAIRED"
+    NEG: "(INSULT ∨ THREAT ∨ PROVOCATION ∨ ALL_CAPS)"
+    MILD: "(SARCASTIC ∨ INTERRUPT ∨ BLAME_YOU)"
+    POS: "(APOLOGY ∨ EMPATHY ∨ SOFTENER ∨ THANKS ∨ ACKNOWLEDGE ∨ OFFER_PAUSE)"
+  rules:
+    - id: R1_react_to_accusation
+      description: "На обвинение должен прийти смягчитель/апология"
+      formula: "G(ACCUSATION → F (APOLOGY ∨ SOFTENER ∨ EMPATHY))"
+      severity: medium
+    - id: R2_repair_after_insult
+      description: "Оскорбление требует выхода к восстановлению"
+      formula: "G(INSULT → (F S_REPAIRED ∨ Within_k(S_NEUTRAL, 10)))"
+      severity: high
+    - id: R3_heated_must_end_in_repaired
+      description: "Каждый HEATED должен быть завершён REPAIRED"
+      formula: "G(S_HEATED → (F S_REPAIRED ∨ F S_NEUTRAL))"
+      severity: high
+    - id: R4_no_insult_immediately_after_heated
+      description: "Не допускается оскорбление сразу после HEATED"
+      formula: "G(S_HEATED → ¬Within_k(INSULT ∨ THREAT ∨ PROVOCATION, 2))"
+      severity: high
+    - id: R5_no_jump_neutral_to_heated
+      description: "Запрещён скачок из NEUTRAL напрямую в HEATED"
+      formula: "G(S_NEUTRAL → ¬X S_HEATED)"
+      severity: medium
+    - id: R6_bounded_softening_after_accusation
+      description: "После обвинения в течение 4 шагов — смягчитель"
+      formula: "G(ACCUSATION → Within_k(APOLOGY ∨ SOFTENER ∨ EMPATHY, 4))"
+      severity: high
+    - id: R7_bounded_deescalation_from_tense
+      description: "Из TENSE за 5 шагов — REPAIRED или позитив"
+      formula: "G(S_TENSE → Within_k(S_REPAIRED ∨ POS ∨ S_NEUTRAL, 5))"
+      severity: medium
+    - id: R8_cooldown_after_repaired
+      description: "После REPAIRED 2 шага без HEATED"
+      formula: "G(S_REPAIRED → (¬X S_HEATED ∧ ¬X^2 S_HEATED))"
+      severity: medium
+    - id: R9_no_back_to_back_strong_neg
+      description: "Два сильных негатива подряд запрещены"
+      formula: "G(NEG → ¬X NEG)"
+      severity: high
+    - id: R10_no_tense_or_heated_after_rep
+      description: "Возврат в TENSE или HEATED запрещен"
+      formula: "G(S_REPAIRED → (¬X S_HEATED ∨ ¬X S_TENSE))"
+    - id: R11_auto_cooldown_from_heated
+      description: "Из HEATED за 5 нейтральных шага — переход в TENSE"
+      formula: "G(S_HEATED → Within_k(S_TENSE, 5))"
+      severity: medium
+
+hints:
+  on_events:
+    INSULT:
+      - "Обнаружена резкая фраза {match}. Попробуйте выразить то же самое более мягко: «Я расстроен(а) этим»"
+      - "Фраза {match} может восприниматься как оскорбление. Предлагаю переформулировать: «Мне неприятно, когда...»"
+    ACCUSATION:
+      - "Обвинительная формулировка {match} вызывает защитную реакцию. Попробуйте: «Мне бы хотелось, чтобы...»"
+      - "Вместо {match} используйте «Я-сообщение»: «Я чувствую... когда происходит...»"
+    ALL_CAPS:
+      - "Текст заглавными {match} воспринимается как крик. Используйте строчные буквы для смягчения."
+    THREAT:
+      - "Угроза {match} эскалирует конфликт. Попробуйте: «Давайте обсудим, как решить этот вопрос»"
+  on_states:
+    TENSE:
+      - "Напряженная ситуация. Добавьте смягчители: «кажется», «возможно», «как насчёт»"
+    HEATED:
+      - "Конфликт обострился. Сделайте паузу или предложите конкретное решение вместо эмоций."
+
+event_extraction:
+  strategy: "any"
+  dedupe: true
+  max_events_per_step: 5
