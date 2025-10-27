@@ -36,8 +36,8 @@
 
 ```bash
 # 1. Клонируйте репозиторий
-git clone <URL вашего репозитория>
-cd <папка проекта>
+git clone https://github.com/ReMAC20/deescalation-radar
+cd deescalation-radar
 
 # 2. Создайте и активируйте виртуальное окружение
 python -m venv .venv
